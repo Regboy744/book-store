@@ -1,27 +1,23 @@
 const authors = require("../models/authors.js")();
 
 module.exports = () => {
-  const getController = (req, res) => {
-    res.setHeader("Content-type", "application/json");
-    return res.end(JSON.stringify(authors.get()));
-  };
+	const getController = async (req, res) => {
+		res.json(await authors.get());
+	};
 
-  const postController = (req, res) => {
-    let name = req.body.name;
-    authors.add(name);
-    return res.end(`Post: ${name}`);
-  };
+	const postController = async (req, res) => {
+		const name = req.body.name;
+		const result = await authors.add(name);
+		res.json(result);
+	};
 
-  const getById = (req, res) => {
-    res.setHeader("Content-Type", "Application/json");
-    res.json(authors.get(req.params.id));
-  }
+	const getById = async (req, res) => {
+		res.json(await authors.get(parseInt(req.params.id)));
+	};
 
-  
-
-  return {
-    getController,
-    postController,
-    getById,
-  };
+	return {
+		getController,
+		postController,
+		getById,
+	};
 };

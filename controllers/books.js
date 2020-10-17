@@ -1,27 +1,25 @@
-const books = require("../models/books")();
+const books = require("../models/books.js")();
 
 module.exports = () => {
-  const getController = (req, res) => {
-    res.setHeader("Content-Type", "Application/jadon");
-    return res.end(JSON.stringify(books.get()));
-  };
+	const getController = async (req, res) => {
+		console.log("inside getControllet");
+		res.json(await books.get());
+	};
 
-  const postController = (req, res) => {
-    let name = req.body.name;
-    const author = req.body.author;
-    books.add(name);
-    return res.end(`Post: ${name}`);
-  };
+	const postController = async (req, res) => {
+		const name = req.body.name;
+		const author = req.body.author;
+		const result = await books.add(name, author);
+		res.json(result);
+	};
 
-  const getById = (req, res) =>{
-    res.setHeader("Content-Type", "Application/json");
-    res.json(books.get(req.params.id));
+	const getById = async (req, res) => {
+		res.json(await books.get(parseInt(req.params.id)));
+	};
 
-  }
-
-  return {
-    getController,
-    postController,
-    getById,
-  };
+	return {
+		getController,
+		postController,
+		getById,
+	};
 };

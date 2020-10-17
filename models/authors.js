@@ -1,29 +1,29 @@
-
-const db = require("../db")();
+const db = require("../db.js")();
+const COLLECTION = "authors";
 
 module.exports = () => {
+	const get = async (id = null) => {
+		console.log("Inside authors model");
 
-  const get = (id = null) => {
-    console.log("Inside authors model");
+		if (!id) {
+			const authors = await db.get(COLLECTION);
+			return authors;
+		}
+		const author = await db.get(COLLECTION, { id });
+		return author;
+	};
 
-    if(!id){
-      return db.authors;
-    }
-    
-    return db.authors[parseInt(id) -1];
+	const add = async (name) => {
+		const authorCount = await db.count(COLLECTION);
+		const result = await db.add(COLLECTION, {
+			id: authorCount + 1,
+			name: name,
+		});
+		return result.result;
+	};
 
-  };
-
-  const add = (name) => {
-    return db.authors.push({
-      id: db.authors.length + 1,
-      name,
-    })
-    
-  };
-
-  return {
-    get,
-    add,
-  };
+	return {
+		get,
+		add,
+	};
 };
